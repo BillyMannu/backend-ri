@@ -6,7 +6,7 @@ from flask import Flask, request, make_response
 from flask_cors import CORS
 from flask_cors import cross_origin
 # import json, jsonify
-from urllib3 import Retry
+#from urllib3 import Retry
 from helpers import Penzi
 from helpers import Start
 from helpers import Details
@@ -18,6 +18,7 @@ from helpers import Chosen
 from helpers import Description
 from helpers import Accept
 from helpers import Deactivate
+import datetime
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -35,6 +36,32 @@ chosen_class = Chosen()#ready>>> joining front end
 description_class = Description()#ready>>> joining front end
 accept_class = Accept()# for when one responds with 'YES'   NOT READY
 deactivate_class = Deactivate()#Not ready
+
+#create a timestamp on each entry
+def datainput(input):
+    print('This will be added to database {}'.format(input))
+    #After input update timestamp
+    timestmp = datetime.datetime.now()
+    print('Data inputed at {}'.format(timestmp))
+    return timestmp
+
+#function to check if time has elapsed
+def checktime(timestamp):
+    next_week = timestamp + datetime.timedelta(days=7)
+    #check if the days elapsed is 1 week
+    #check if the next_week equals todays date
+    #if so means a week has passed since last input
+    today = datetime.datetime.now()
+    if next_week == today:
+        print('Time has elapsed send a message')
+    else:
+        print('Today is {}, last input was {}'.format(today, next_week))
+        print('Sending message')
+lastinput = datainput('TEST')
+checktime(lastinput)
+
+
+
 
 #API
 @app.route("/penzi", methods=['POST','GET'])

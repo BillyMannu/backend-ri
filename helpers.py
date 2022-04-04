@@ -1,19 +1,15 @@
-import this
-from traceback import print_tb
-from unicodedata import name
-from idlelib.multicall import r
+from distutils.command.config import config
 import mysql.connector
 import json
-import sys as json
-# from json import jsonEncoder
 from flask import request, make_response
+from decouple import config
 
 # connect to database
 mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password='',
-    database="penzi"
+    host=config('host'),
+    user=config('user'),
+    password=config('password'),
+    database=config('database')
 )
 print('MySQL Database connection successful')
 print(mydb)
@@ -38,8 +34,8 @@ class Penzi:
             message = json['message']
             number = json['number']
 
-            sql = "INSERT INTO messages (number, message) VALUES (%s, %s)"
-            val = (number, message)
+            sql = "INSERT INTO messages (number, message, dateRegistered) VALUES (%s, %s , %s)"
+            val = (number, message )
             mycursor.execute(sql, val)
             mydb.commit()
 
@@ -52,11 +48,10 @@ class Penzi:
             val2 = (message2, number)
             mycursor.execute(sql2, val2)
             mydb.commit()
-            # return make_response({
-            #     "message":"welcome to our dating service with 600 potential partners! To register SMS " \
-            #            "start#name#age#sex#provnce#town "
-            # })
-            return "<h1> returning html </h1>"
+            return make_response({
+                "message":"welcome to our dating service with 600 potential partners! To register SMS " \
+                       "start#name#age#sex#provnce#town "
+            })
 
 
 class Start:
